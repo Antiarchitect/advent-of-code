@@ -13,8 +13,8 @@ impl Machine {
     }
 
     fn run(&mut self) -> usize {
-        self.memory[1] = 12;
-        self.memory[2] = 2;
+        self.memory[1usize] = 12usize;
+        self.memory[2usize] = 2usize;
         while self.memory.len() > self.ptr {
             match self.read() {
                 99 => { break; },
