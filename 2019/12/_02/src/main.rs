@@ -13,6 +13,8 @@ impl Machine {
     }
 
     fn run(&mut self) -> usize {
+        self.memory[1] = 12;
+        self.memory[2] = 2;
         while self.memory.len() > self.ptr {
             match self.read() {
                 99 => { break; },
@@ -31,20 +33,23 @@ impl Machine {
         *self.memory.first().unwrap()
     }
 
-    fn read(&self) -> usize {
-        self.memory[self.ptr]
+    fn read(&mut self) -> usize {
+        self.ptr += 1;
+        self.memory[self.ptr - 1]
     }
 
     fn sum(&mut self) {
-        self.ptr += 1;
-        self.memory[self.memory[self.ptr + 2]] = self.memory[self.memory[self.ptr]] + self.memory[self.memory[self.ptr + 1]];
-        self.ptr += 3;
+        let left = self.read();
+        let right = self.read();
+        let dest = self.read();
+        self.memory[dest] = self.memory[left] + self.memory[right];
     }
 
     fn mul(&mut self) {
-        self.ptr += 1;
-        self.memory[self.memory[self.ptr + 2]] = self.memory[self.memory[self.ptr]] * self.memory[self.memory[self.ptr + 1]];
-        self.ptr += 3;
+        let left = self.read();
+        let right = self.read();
+        let dest = self.read();
+        self.memory[dest] = self.memory[left] * self.memory[right];
     }
 }
 
