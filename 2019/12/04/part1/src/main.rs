@@ -1,6 +1,6 @@
 fn main() {
-    let lower: u64 = 382345;
-    let upper: u64 = 843167;
+    let lower: u32 = 382345;
+    let upper: u32 = 843167;
 
     let count = (lower..=upper)
         .filter(|&x| {
