@@ -11,36 +11,7 @@ impl Iterator for Combination {
             return None;
         };
 
-        let mut memory = 0;
-
-        self.current = self
-            .current
-            .chars()
-            .rev()
-            .fold(Vec::new(), |mut acc, c| {
-                let mut x = c.to_digit(10).expect("Cannot parse digit");
-
-                x += memory;
-
-                match acc.last() {
-                    None => x += 1,
-                    Some(_) => {}
-                }
-
-                if x == 10 {
-                    memory = 1;
-                    x = 0;
-                } else {
-                    memory = 0;
-                }
-
-                acc.push(std::char::from_digit(x, 10).expect("Cannot construct digit"));
-                acc
-            })
-            .iter()
-            .rev()
-            .collect::<String>();
-
+        self.current = format!("{:0>6}", self.current.parse::<u32>().expect("Cannot parse as u32") + 1);
         Some(self.current.to_owned())
     }
 }
