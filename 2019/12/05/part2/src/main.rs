@@ -10,15 +10,14 @@ struct Instruction {
     code: u8,
     mode1: u8,
     mode2: u8,
-    mode3: u8,
 }
 
 impl Machine {
     fn new(instructions: Vec<i32>, input: Vec<i32>, output: Vec<i32>) -> Self {
         Machine {
-            instructions: instructions,
-            input: input,
-            output: output,
+            instructions,
+            input,
+            output,
             ptr: 0usize,
         }
     }
@@ -67,7 +66,6 @@ impl Machine {
     fn read(&mut self) -> Instruction {
         let instruction = format!("{:0>5}", self.instructions[self.ptr]);
         Instruction {
-            mode3: instruction[0..1].parse::<u8>().expect("Cannot parse as u8"),
             mode2: instruction[1..2].parse::<u8>().expect("Cannot parse as u8"),
             mode1: instruction[2..3].parse::<u8>().expect("Cannot parse as u8"),
             code: instruction[3..5].parse::<u8>().expect("Cannot parse as u8"),

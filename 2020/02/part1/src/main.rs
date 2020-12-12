@@ -12,7 +12,7 @@ fn main() {
             let parsed = line.expect("Cannot read line");
             let parts: Vec<&str> = parsed.split_whitespace().collect();
             let boundary: Vec<usize> = parts[0]
-                .split("-")
+                .split('-')
                 .map(|x| {
                     x.parse::<usize>()
                         .expect("Cannot parse boundary to positive integer")
@@ -22,16 +22,14 @@ fn main() {
             let letters_count = parts[2]
                 .chars()
                 .filter(|char| char.to_string() == letter)
-                .collect::<Vec<char>>()
-                .len();
+                .count();
             if letters_count >= boundary[0] && letters_count <= boundary[1] {
                 Some(parsed)
             } else {
                 None
             }
         })
-        .collect::<Vec<String>>()
-        .len();
+        .count();
 
     println!("{}", count);
 }

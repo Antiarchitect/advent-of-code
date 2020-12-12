@@ -8,7 +8,7 @@ struct Point {
 }
 
 impl Point {
-    fn distance(self) -> (usize) {
+    fn distance(self) -> usize {
         self.x.abs() as usize + self.y.abs() as usize
     }
 }
@@ -40,7 +40,7 @@ fn source_to_map(source: &str) -> Vec<Point> {
             for y in (self.current.y + 1)..=ending {
                 self.points.push(Point {
                     x: self.current.x,
-                    y: y,
+                    y,
                 });
             }
             self.current = Point {
@@ -54,7 +54,7 @@ fn source_to_map(source: &str) -> Vec<Point> {
             for y in start..=self.current.y {
                 self.points.push(Point {
                     x: self.current.x,
-                    y: y,
+                    y,
                 });
             }
             self.current = Point {
@@ -68,7 +68,7 @@ fn source_to_map(source: &str) -> Vec<Point> {
             for x in (self.current.x + 1)..=ending {
                 self.points.push(Point {
                     y: self.current.y,
-                    x: x,
+                    x,
                 });
             }
             self.current = Point {
@@ -82,7 +82,7 @@ fn source_to_map(source: &str) -> Vec<Point> {
             for x in start..self.current.x {
                 self.points.push(Point {
                     y: self.current.y,
-                    x: x,
+                    x,
                 });
             }
             self.current = Point {
