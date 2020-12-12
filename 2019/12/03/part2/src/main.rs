@@ -16,7 +16,11 @@ fn main() {
     let second_hashset: HashSet<Point> = HashSet::from_iter(second.clone());
     let minsteps = first_hashset
         .intersection(&second_hashset)
-        .map(|x| first.iter().position(|p| p == x).unwrap() + second.iter().position(|p| p == x).unwrap() + 2)
+        .map(|x| {
+            first.iter().position(|p| p == x).unwrap()
+                + second.iter().position(|p| p == x).unwrap()
+                + 2
+        })
         .min_by_key(|&x| x)
         .unwrap();
     println!("{}", minsteps);

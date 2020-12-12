@@ -13,7 +13,9 @@ fn main() {
             .expect("Cannot parse positive integer");
         loop {
             let step_mass: i64 = mass as i64 / 3 - 2;
-            if step_mass <= 0 { break; }
+            if step_mass <= 0 {
+                break;
+            }
             acc += step_mass as u64;
             mass = step_mass as u64;
         }

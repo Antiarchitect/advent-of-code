@@ -11,7 +11,10 @@ impl Iterator for Combination {
             return None;
         };
 
-        self.current = format!("{:0>6}", self.current.parse::<u32>().expect("Cannot parse as u32") + 1);
+        self.current = format!(
+            "{:0>6}",
+            self.current.parse::<u32>().expect("Cannot parse as u32") + 1
+        );
         Some(self.current.to_owned())
     }
 }
