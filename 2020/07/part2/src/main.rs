@@ -13,24 +13,30 @@ fn main() {
             .lines()
             .fold(BTreeMap::new(), |mut acc, line| {
                 let bag = line.expect("Cannot read line");
-                let dict: Vec<&str> = bag.split(" bags contain ").collect();
-                let contains: BTreeMap<String, usize> = match dict[1] {
-                    "no other bags." => BTreeMap::new(),
-                    _ => dict[1]
-                        .split(", ")
-                        .map(|x| {
-                            let splitted: Vec<String> =
-                                x.split(' ').map(|x| x.to_string()).collect();
-                            (
-                                [splitted[1].to_string(), splitted[2].to_string()].join(" "),
-                                splitted[0]
+                let mut splitter = bag.split(" bags contain ");
+                let name = splitter.next().expect("No bag name").to_string();
+                let contains: BTreeMap<String, usize> =
+                    match splitter.next().expect("No contained bags info") {
+                        "no other bags." => BTreeMap::new(),
+                        info => info
+                            .split(", ")
+                            .map(|x| {
+                                let mut splitter = x.split(' ');
+                                let count = splitter
+                                    .next()
+                                    .expect("No bags count")
                                     .parse::<usize>()
-                                    .expect("Cannot parse bags count"),
-                            )
-                        })
-                        .collect::<BTreeMap<String, usize>>(),
-                };
-                acc.insert(dict[0].to_string(), contains);
+                                    .expect("Cannot parse bags count");
+                                let name = splitter
+                                    .take(2)
+                                    .map(|x| x.to_string())
+                                    .collect::<Vec<String>>()
+                                    .join(" ");
+                                (name, count)
+                            })
+                            .collect::<BTreeMap<String, usize>>(),
+                    };
+                acc.insert(name, contains);
                 acc
             });
     println!("{}", nested_sum(&bags, "shiny gold"));
