@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 
 use std::fs::File;
 
@@ -10,10 +10,10 @@ fn main() {
 
     let answers: usize = BufReader::new(file)
         .lines()
-        .fold(vec![HashSet::new()], |mut acc, line| {
+        .fold(vec![BTreeSet::new()], |mut acc, line| {
             let parsed = line.expect("Cannot read line");
             if parsed.trim().is_empty() {
-                acc.push(HashSet::new());
+                acc.push(BTreeSet::new());
             } else {
                 let last = acc.iter_mut().last().expect("Cannot find last");
                 parsed.chars().for_each(|c| {

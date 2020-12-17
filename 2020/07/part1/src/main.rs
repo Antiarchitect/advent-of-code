@@ -1,5 +1,4 @@
-use std::collections::BTreeMap;
-use std::collections::HashSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use std::fs::File;
 
@@ -32,7 +31,7 @@ fn main() {
                 acc.insert(dict[0].to_string(), contains);
                 acc
             });
-    let mut containers: HashSet<String> = HashSet::new();
+    let mut containers: BTreeSet<String> = BTreeSet::new();
     containers.insert("shiny gold".to_string());
     loop {
         let containers_filter = containers.clone();

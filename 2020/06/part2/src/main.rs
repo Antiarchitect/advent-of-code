@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 
 use std::fs::File;
 
@@ -16,14 +16,14 @@ fn main() {
                 acc.push(Vec::new());
             } else {
                 let last = acc.iter_mut().last().expect("Cannot find last");
-                let new: HashSet<char> = parsed.chars().collect();
+                let new: BTreeSet<char> = parsed.chars().collect();
                 last.push(new);
             };
             acc
         })
         .iter()
         .map(|sets| {
-            let superset = sets.iter().fold(HashSet::new(), |mut acc, set| {
+            let superset = sets.iter().fold(BTreeSet::new(), |mut acc, set| {
                 set.iter().for_each(|c| {
                     acc.insert(c);
                 });
