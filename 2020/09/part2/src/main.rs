@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use std::fs::File;
 
 use std::io::prelude::*;
@@ -44,5 +46,29 @@ fn main() {
             }
         })
         .expect("All numbers are valid");
-    println!("{}", error);
+    let sum = numbers
+        .iter()
+        .enumerate()
+        .find_map(|(shift, _)| {
+            let mut range_len = 1;
+            loop {
+                let slice = &numbers[shift..(shift + range_len)];
+                let sum: u64 = slice.iter().sum();
+                match sum.cmp(&error) {
+                    Ordering::Equal => {
+                        return Some(
+                            slice.iter().min().expect("No min value")
+                                + slice.iter().max().expect("No max value"),
+                        )
+                    }
+                    Ordering::Greater => return None,
+                    Ordering::Less => {
+                        range_len += 1;
+                        continue;
+                    }
+                }
+            }
+        })
+        .expect("All numbers are valid");
+    println!("{}", sum);
 }
