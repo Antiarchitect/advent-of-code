@@ -51,13 +51,13 @@ fn main() {
                                     .take(col_end + 1)
                                     .skip(col_start)
                                     .fold(0, |acc, (col, &col_content)| {
-                                        if row == row_index && col == col_index {
-                                            return acc;
-                                        };
-                                        if col_content == '#' {
-                                            return acc + 1;
-                                        };
-                                        acc
+                                        if col_content == '#'
+                                            && !(row == row_index && col == col_index)
+                                        {
+                                            acc + 1
+                                        } else {
+                                            acc
+                                        }
                                     })
                             });
                         if col == 'L' && occupied == 0 {
