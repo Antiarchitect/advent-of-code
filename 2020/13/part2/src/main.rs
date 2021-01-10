@@ -3,6 +3,11 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 
+struct State {
+    start: usize,
+    step: usize,
+}
+
 fn main() {
     let file = File::open("schedule.txt").expect("Cannot open file");
     let mut lines = BufReader::new(file)
@@ -18,25 +23,28 @@ fn main() {
             value => Some(value.parse().expect("Cannot parse as positive integer")),
         })
         .collect();
-    let mut step = 1;
-    let mut start = 1;
-    schedule.iter().enumerate().for_each(|(shift, bus)| {
-        for timestamp in (start..).step_by(step) {
-            match bus {
-                None => {
-                    break;
-                }
-                Some(bus) => {
-                    if (timestamp + shift) % bus == 0 {
-                        step *= bus;
-                        start = timestamp;
-                        break;
-                    } else {
-                        continue;
+    let state =
+        schedule
+            .iter()
+            .enumerate()
+            .fold(State { start: 1, step: 1 }, |mut acc, (shift, bus)| {
+                for timestamp in (acc.start..).step_by(acc.step) {
+                    match bus {
+                        None => {
+                            break;
+                        }
+                        Some(bus) => {
+                            if (timestamp + shift) % bus == 0 {
+                                acc.step *= bus;
+                                acc.start = timestamp;
+                                break;
+                            } else {
+                                continue;
+                            }
+                        }
                     }
                 }
-            }
-        }
-    });
-    println!("{:#?}", start);
+                acc
+            });
+    println!("{:#?}", state.start);
 }
