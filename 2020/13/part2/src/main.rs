@@ -35,6 +35,7 @@ fn main() {
                         }
                         Some(bus) => {
                             if (timestamp + shift) % bus == 0 {
+                                // Step increased by multiplication as bus IDs are prime numbers
                                 acc.step *= bus;
                                 acc.start = timestamp;
                                 break;
