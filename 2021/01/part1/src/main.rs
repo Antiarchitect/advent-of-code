@@ -4,7 +4,7 @@ use std::io::prelude::*;
 use std::io::BufReader;
 
 fn main() {
-    let file = File::open("sonar.txt").expect("Cannot open file");
+    let file = File::open("input.txt").expect("Cannot open file");
 
     let result: (usize, Option<u64>) = BufReader::new(file).lines().fold((0, None), |acc, line| {
         let current = line

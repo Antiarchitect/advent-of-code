@@ -4,7 +4,7 @@ use std::io::prelude::*;
 use std::io::BufReader;
 
 fn main() {
-    let file = File::open("sonar.txt").expect("Cannot open file");
+    let file = File::open("input.txt").expect("Cannot open file");
 
     let lines: Vec<u64> = BufReader::new(file)
         .lines()
