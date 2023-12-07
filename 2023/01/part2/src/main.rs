@@ -8,23 +8,42 @@ fn main() {
 
     let file = File::open("input.txt").expect("Cannot open file");
 
-    let result: i32 = BufReader::new(file).lines().fold(0, |acc, line| {
+    let result: usize = BufReader::new(file).lines().fold(0, |acc, line| {
         let line = line.expect("Cannot read line");
-        let replaced = line.chars().fold(String::new(), |acc, c| {
-            let mut replacement = acc + &c.to_string();
-            for (index, digit) in DIGITS.iter().enumerate() {
-                replacement = replacement.replace(digit, &(index + 1).to_string());
+        let mut first = 0usize;
+        let mut lbuffer = String::new();
+        for c in line.chars() {
+            if c.is_digit(10) {
+                first = c.to_digit(10).expect("Cannot parse digit as usize") as usize;
+                break;
             }
-            replacement
-        });
-        let filtered: Vec<_> = replaced
-        .chars()
-        .filter(|i| i.is_digit(10))
-        .collect();
-        let first = filtered.first().expect("No first digit");
-        let last = filtered.last().expect("No last digit");
-        let number = format!("{first}{last}").parse::<i32>().expect("Cannot parse to i32");
-        println!("{line} {replaced} {number}");
+            lbuffer = lbuffer + &c.to_string();
+            for (index, digit) in DIGITS.iter().enumerate() {
+                if lbuffer.ends_with(digit) {
+                    first = index + 1;
+                    break;
+                }
+            }
+            if first > 0 { break; }
+        }
+
+        let mut last = 0usize;
+        let mut rbuffer = String::new();
+        for c in line.chars().rev() {
+            if c.is_digit(10) {
+                last = c.to_digit(10).expect("Cannot parse digit as usize") as usize;
+                break;
+            }
+            rbuffer = rbuffer + &c.to_string();
+            for (index, digit) in DIGITS.iter().map(|d| d.chars().rev().collect::<String>()).enumerate() {
+                if rbuffer.ends_with(&digit) {
+                    last = index + 1;
+                    break;
+                }
+            }
+            if last > 0 { break; }
+        }
+        let number = format!("{first}{last}").parse::<usize>().expect("Cannot parse as usize");
         acc + number
     });
     println!("{result}");
