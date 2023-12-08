@@ -3,27 +3,51 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 
+use core::cmp::{max, min};
+use std::collections::HashMap;
+
 fn main() {
     let file = File::open("input.txt").expect("Cannot open file");
 
-    let result: usize = BufReader::new(file).lines().fold(0, |acc, line| {
-        let gameline = line.expect("Cannot read line");
-        let gameline_parts: Vec<_> = gameline.split(": ").collect();
-        let powers = gameline_parts.last().expect("No last part in game").split("; ").fold((0, 0, 0), |mut acc, game| {
-            for color_str in game.split(", ") {
-                let color_parts: Vec<_> = color_str.split(" ").collect();
-                let count = color_parts.first().expect("No first part in color").parse::<usize>().expect("Cannot parse count as usize");
-                let color = color_parts.last().expect("No first part in color");
-                match *color {
-                    "red" => { if count > acc.0 { acc.0 = count } }
-                    "green" => { if count > acc.1 { acc.1 = count }}
-                    "blue" => { if count > acc.2 { acc.2 = count } }
-                    _ => panic!("Unknown color")
-                };
+    let lines: Vec<String> = BufReader::new(file).lines().map(|l| l.expect("Cannot read line")).collect();
+    let arena_h_max_idx: i32 = lines.len() as i32 - 1;
+    let arena_l_max_idx: i32 = lines.first().expect("No first line").len() as i32 - 1;
+
+    let mut gear_candidates: HashMap<(i32, i32), Vec<usize>> = HashMap::new();
+    lines.iter().enumerate().for_each(|(lindex, line)| {
+        let mut number_str: (i32, i32, String) = (lindex as i32, 0i32, String::new());
+        for (cindex, c) in line.chars().enumerate() {
+            if c.is_digit(10) {
+                if number_str.2.is_empty() {
+                    number_str.1 = cindex as i32;
+                }
+                number_str.2 += &c.to_string();
+            };
+            if !c.is_digit(10) || (cindex as i32) == arena_l_max_idx {
+                if !number_str.2.is_empty() {
+                    let number = number_str.2.parse::<usize>().expect("Cannot parse number as usize");
+                    for h in max(0, number_str.0 - 1)..=min(arena_h_max_idx, number_str.0 + 1) {
+                        let line_chars = lines[h as usize].chars().collect::<Vec<char>>();
+                        for l in max(0, number_str.1 - 1)..=min(arena_l_max_idx, number_str.1 + number_str.2.len() as i32) {
+                            let candidate = line_chars[l as usize];
+                            if candidate == '*'  {
+                                let entry = gear_candidates.entry((l, h)).or_insert(Vec::new());
+                                entry.push(number);
+                            }
+                        }
+                    }
+                    number_str.2 = String::new();
+                }
             }
-            acc
-        });
-        acc + powers.0 * powers.1 * powers.2
+        }
+    });
+
+    let result: usize = gear_candidates.iter().fold(0, |acc, ((_l, _h), nums)| {
+        if nums.len() == 2 {
+            let ratio = nums.first().expect("No first") * nums.last().expect("No last");
+            return acc + ratio;
+        }
+        acc
     });
     println!("{result}");
 }
